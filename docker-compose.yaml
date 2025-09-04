@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  go-todo-cli:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=todo_user
+      - POSTGRES_PASSWORD=todo_password
+      - POSTGRES_DB=todo_db
+      - POSTGRES_SSL_MODE=disable
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["list"]  # Default command
+    networks:
+      - todo-network
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=todo_user
+      - POSTGRES_PASSWORD=todo_password
+      - POSTGRES_DB=todo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - todo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo_user -d todo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  todo-network:
+    driver: bridge
