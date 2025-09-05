@@ -43,8 +43,8 @@ func (r *TodoRepository) FindAll(ctx context.Context) ([]*domain.Todo, error) {
 			&todo.Title,
 			&todo.Description,
 			&todo.Completed,
-			&todo.CreatedDate,
-			&todo.UpdatedDate,
+			&todo.CreatedAt,
+			&todo.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -79,8 +79,8 @@ func (r *TodoRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.To
 		&todo.Title,
 		&todo.Description,
 		&todo.Completed,
-		&todo.CreatedDate,
-		&todo.UpdatedDate,
+		&todo.CreatedAt,
+		&todo.UpdatedAt,
 	)
 	if err != nil {
 		return nil, err
@@ -96,7 +96,7 @@ func (r *TodoRepository) Create(ctx context.Context, todo *domain.Todo) error {
 	`
 
 	_, err := r.db.Exec(ctx, query,
-		todo.ID, todo.Title, todo.Description, todo.Completed, todo.CreatedDate, todo.UpdatedDate)
+		todo.ID, todo.Title, todo.Description, todo.Completed, todo.CreatedAt, todo.UpdatedAt)
 	return err
 }
 
@@ -107,7 +107,7 @@ func (r *TodoRepository) Update(ctx context.Context, todo *domain.Todo) error {
 			WHERE id = $4
 	`
 	_, err := r.db.Exec(ctx, query,
-		todo.Title, todo.Description, todo.UpdatedDate, todo.ID)
+		todo.Title, todo.Description, todo.UpdatedAt, todo.ID)
 	return err
 }
 

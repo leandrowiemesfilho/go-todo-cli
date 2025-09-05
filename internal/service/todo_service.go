@@ -8,20 +8,11 @@ import (
 	"github.com/leandrowiemesfilho/go-todo-cli/internal/domain"
 )
 
-type TodoService interface {
-	FindAllTodos(ctx context.Context) ([]*domain.Todo, error)
-	FindTodoByID(ctx context.Context, id uuid.UUID) (*domain.Todo, error)
-	CreateTodo(ctx context.Context, request domain.CreateTodoRequest) (*domain.Todo, error)
-	UpdateTodo(ctx context.Context, request domain.UpdateTodoRequest) (*domain.Todo, error)
-	DeleteTodo(ctx context.Context, id uuid.UUID) error
-	ToggleTodo(ctx context.Context, id uuid.UUID) (*domain.Todo, error)
-}
-
 type todoServiceImpl struct {
 	repo domain.TodoRepository
 }
 
-func NewTodoService(repo domain.TodoRepository) TodoService {
+func NewTodoService(repo domain.TodoRepository) domain.TodoService {
 	return &todoServiceImpl{repo: repo}
 }
 
@@ -39,8 +30,8 @@ func (s todoServiceImpl) CreateTodo(ctx context.Context, request domain.CreateTo
 		Title:       request.Title,
 		Description: request.Description,
 		Completed:   false,
-		CreatedDate: time.Now(),
-		UpdatedDate: time.Now(),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 
 	if err := s.repo.Create(ctx, todo); err != nil {
@@ -58,7 +49,7 @@ func (s todoServiceImpl) UpdateTodo(ctx context.Context, request domain.UpdateTo
 
 	todo.Title = request.Title
 	todo.Description = request.Description
-	todo.UpdatedDate = time.Now()
+	todo.UpdatedAt = time.Now()
 
 	if err = s.repo.Update(ctx, todo); err != nil {
 		return nil, err

@@ -32,6 +32,8 @@ WORKDIR /app
 COPY --from=builder /app/go-todo-cli .
 COPY --from=builder /app/migrations ./migrations
 
+RUN chmod +x go-todo-cli
+
 # Create non-root user
 RUN adduser -D -u 1000 todouser && \
     chown -R todouser:todouser /app

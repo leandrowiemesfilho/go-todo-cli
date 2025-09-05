@@ -19,7 +19,7 @@ import (
 
 type CLI struct {
 	rootCmd     *cobra.Command
-	todoService service.TodoService
+	todoService domain.TodoService
 	dbPool      *pgxpool.Pool
 }
 
@@ -289,7 +289,7 @@ func (cli *CLI) printTodoTable(todos []*domain.Todo) {
 			todo.ID.String()[:8],
 			truncate(todo.Title, 20),
 			status,
-			todo.CreatedDate.Format("2006-01-02 15:04"),
+			todo.CreatedAt.Format("2006-01-02 15:04"),
 		)
 	}
 	w.Flush()
@@ -308,8 +308,8 @@ func (cli *CLI) printTodo(todo *domain.Todo) {
 		fmt.Printf("  Description: %s\n", todo.Description)
 	}
 	fmt.Printf("  Status:      %s\n", status)
-	fmt.Printf("  Created:     %s\n", todo.CreatedDate.Format("2006-01-02 15:04:05"))
-	fmt.Printf("  Updated:     %s\n", todo.UpdatedDate.Format("2006-01-02 15:04:05"))
+	fmt.Printf("  Created:     %s\n", todo.CreatedAt.Format("2006-01-02 15:04:05"))
+	fmt.Printf("  Updated:     %s\n", todo.UpdatedAt.Format("2006-01-02 15:04:05"))
 	fmt.Println()
 }
 

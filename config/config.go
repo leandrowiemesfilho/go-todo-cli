@@ -21,7 +21,7 @@ func LoadConfig() *Config {
 	// Load .env file if it exists
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Printf("Error loading .env file. Fallback value will be used")
 	}
 
 	config := &Config{
